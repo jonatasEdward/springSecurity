@@ -18,16 +18,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
+    private static final String ADMIN = "ADMIN";  // Compliant
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) -> authorize
+                .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers("/admin").hasAnyRole("ADMIN")
-                        .requestMatchers("/user").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/admin").hasAnyRole(ADMIN)
+                        .requestMatchers("/user").hasAnyRole(ADMIN, "USER")
                         .anyRequest().authenticated()
                 ).formLogin(Customizer.withDefaults());
         return http.build();
@@ -45,7 +46,7 @@ public class WebSecurityConfig {
         UserDetails admin = users
                 .username("admin")
                 .password("{noop}123")
-                .roles("ADMIN")
+                .roles(ADMIN)
                 .build();
 
         return new InMemoryUserDetailsManager(user1, admin);
