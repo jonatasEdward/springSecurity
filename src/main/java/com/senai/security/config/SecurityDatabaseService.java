@@ -32,4 +32,5 @@ public class SecurityDatabaseService implements UserDetailsService {
                 authorities);
         return user;
     }
+
 }
